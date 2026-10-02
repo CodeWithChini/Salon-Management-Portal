@@ -1,0 +1,65 @@
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+// 1. Validation Schema (Kept exactly as requested)
+const validationSchema = Yup.object({
+  name: Yup.string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be 50 characters or less')
+    .required('Name is required'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
+});
+
+const BasicForm = () => {
+  return (
+    <Formik
+      // 2. Initial Values
+      initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
+      // 3. Connect Yup Schema
+      validationSchema={validationSchema}
+      // 4. Simplified Submit Logic
+      onSubmit={(values) => {
+        alert(JSON.stringify(values, null, 2));
+      }}
+    >
+      <Form>
+        <div>
+          <label>Name: </label>
+          <Field name="name" type="text" />
+          <ErrorMessage name="name" component="div" />
+        </div>
+
+        <div>
+          <label>Email: </label>
+          <Field name="email" type="email" />
+          <ErrorMessage name="email" component="div" />
+        </div>
+
+        <div>
+          <label>Password: </label>
+          <Field name="password" type="password" />
+          <ErrorMessage name="password" component="div" />
+        </div>
+
+        <div>
+          <label>Confirm Password: </label>
+          <Field name="confirmPassword" type="password" />
+          <ErrorMessage name="confirmPassword" component="div" />
+        </div>
+
+        <button type="submit">Submit</button>
+      </Form>
+    </Formik>
+  );
+};
+
+export default BasicForm;
